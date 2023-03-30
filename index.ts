@@ -27,7 +27,7 @@ app.get('/', (req: Request, res: Response) => {
     const openDBConnection = (): Pool => {
         const pool = new Pool({
             user: 'shovan',
-            host: 'dpg-cgiv1horjeniukbdcon0-a.oregon-postgres.render.com',
+            host: 'dpg-cgiv1horjeniukbdcon0-a',
             database: 'todo_2kmi',
             password: 'GtqInI7Tv7onshcdgRxy48JrihLaYF7W',
             port: 5432,
