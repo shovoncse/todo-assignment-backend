@@ -36,17 +36,12 @@ app.get('/', (req, res) => {
 });
 const openDBConnection = () => {
     const pool = new pg_1.Pool({
-        user: 'postgres',
-        host: 'localhost',
-        database: 'todo',
-        password: 'todo',
+        user: 'shovan',
+        host: 'dpg-cgiv1horjeniukbdcon0-a.oregon-postgres.render.com',
+        database: 'todo_2kmi',
+        password: 'GtqInI7Tv7onshcdgRxy48JrihLaYF7W',
         port: 5432,
-        /*user: 'root',
-         host: 'dpg-cgat2402qv267udp53ig-a.oregon-postgres.render.com',
-         database: 'todo_eeya',
-         password:'ULTWdv0VJGHiwhsXNQkKtrixUjgRvOS9',
-         port: 5432,
-         ssl : true*/
+        ssl: true
     });
     return pool;
 };
