@@ -20,11 +20,6 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
 const port = 3001;
-/*app.get('/', (req: Request, res: Response) => {
-    res.status(200).json({result: 'Hello success'})
-})
-
-app.listen(port)*/
 app.get('/', (req, res) => {
     const pool = openDBConnection();
     pool.query('SELECT * FROM task', (err, result) => {
@@ -61,6 +56,16 @@ app.delete('/delete/:id', (req, res) => __awaiter(void 0, void 0, void 0, functi
     const pool = openDBConnection();
     const id = parseInt(req.params.id);
     pool.query('delete from task where id = $1', [id], (error, result) => {
+        if (error) {
+            res.status(500).json({ error: error.message });
+        }
+        res.status(200).json({ id: id });
+    });
+}));
+app.put('/update/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const pool = openDBConnection();
+    const id = parseInt(req.params.id);
+    pool.query('update task set status = false where id = $1', [id], (error, result) => {
         if (error) {
             res.status(500).json({ error: error.message });
         }

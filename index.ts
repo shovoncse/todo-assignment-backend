@@ -1,63 +1,73 @@
-import express, {Express, Request, Response} from 'express'
+import express, { Express, Request, Response } from 'express'
 import cors from 'cors'
 import { Pool, QueryResult } from 'pg';
 
 const app: Express = express()
 app.use(cors())
 app.use(express.json())
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }))
 
 const port = 3001
 
-/*app.get('/', (req: Request, res: Response) => {
-    res.status(200).json({result: 'Hello success'})
-})
-
-app.listen(port)*/
 
 app.get('/', (req: Request, res: Response) => {
     const pool = openDBConnection()
     pool.query('SELECT * FROM task', (err, result) => {
-        if(err){
-            res.status(500).json({error: err})
+        if (err) {
+            res.status(500).json({ error: err })
         }
         res.status(200).json(result.rows)
-        })
     })
-    const openDBConnection = (): Pool => {
-        const pool = new Pool({
-            user: 'shovan',
-            host: 'dpg-cgiv1horjeniukbdcon0-a.oregon-postgres.render.com',
-            database: 'todo_2kmi',
-            password: 'GtqInI7Tv7onshcdgRxy48JrihLaYF7W',
-            port: 5432,
-            ssl : true
-        })
-        return pool
-    }
-    app.listen(port, () => {
-        console.log(`Server is listening on port ${port}`);
-    });
+})
 
-    app.post('/new', (req: Request, res: Response) => {
-        const pool = openDBConnection()
-        pool.query('INSERT INTO task (description) VALUES ($1) returning *',
-         [req.body.description], 
-         (error: Error, result:QueryResult) => {
-            if(error){
-                res.status(500).json({error: error.message})
-            }
-            res.status(200).json({id: result.rows[0].id})
-        })
-    });
-    app.delete('/delete/:id', async(req: Request, res: Response)=>{
-        const pool = openDBConnection()
-        const id = parseInt(req.params.id)
-        pool.query('delete from task where id = $1', [id],
-        (error: Error, result: QueryResult) => {
-            if(error){
-                res.status(500).json({error: error.message})
-            }
-            res.status(200).json({id: id})
-        })
+const openDBConnection = (): Pool => {
+    const pool = new Pool({
+        user: 'shovan',
+        host: 'dpg-cgiv1horjeniukbdcon0-a.oregon-postgres.render.com',
+        database: 'todo_2kmi',
+        password: 'GtqInI7Tv7onshcdgRxy48JrihLaYF7W',
+        port: 5432,
+        ssl: true
     })
+    return pool
+}
+
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
+});
+
+app.post('/new', (req: Request, res: Response) => {
+    const pool = openDBConnection()
+    pool.query('INSERT INTO task (description) VALUES ($1) returning *',
+        [req.body.description],
+        (error: Error, result: QueryResult) => {
+            if (error) {
+                res.status(500).json({ error: error.message })
+            }
+            res.status(200).json({ id: result.rows[0].id })
+        })
+});
+
+app.delete('/delete/:id', async (req: Request, res: Response) => {
+    const pool = openDBConnection()
+    const id = parseInt(req.params.id)
+    pool.query('delete from task where id = $1', [id],
+        (error: Error, result: QueryResult) => {
+            if (error) {
+                res.status(500).json({ error: error.message })
+            }
+            res.status(200).json({ id: id })
+        })
+})
+
+app.put('/update/:id', async (req: Request, res: Response) => {
+    const pool = openDBConnection()
+    const id = parseInt(req.params.id)
+    pool.query('update task set status = false where id = $1', [id],
+        (error: Error, result: QueryResult) => {
+            if (error) {
+                res.status(500).json({ error: error.message })
+            }
+            res.status(200).json({ id: id })
+        })
+})
